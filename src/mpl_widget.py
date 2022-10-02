@@ -28,8 +28,8 @@ class MplGraphics(FigureCanvas):
         :return: None.
         """
         self.ax1.set_title("Опорный сигнал")
-        self.ax1.set_xlabel("Отсчёты сигнала")
-        self.ax1.set_ylabel("Значения сигнала")
+        self.ax1.set_xlabel("Время, сек")
+        self.ax1.set_ylabel("Амплитуда, дБ")
         self.ax1.grid(linestyle="dotted", alpha=0.65)
 
     def plot_graph(self, x_list: list, y_list: list):

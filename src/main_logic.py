@@ -98,6 +98,12 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.am_manipulation_radio.isChecked():
             x, y = self.signal_generator.get_ampl_modulated_signal()
 
+        elif self.fm2_manipulation_radio.isChecked():
+            x, y = self.signal_generator.get_fm2_modulated_signal()
+
+        elif self.mchm_manipulation_radio.isChecked():
+            x, y = self.signal_generator.get_freq_modulated_signal()
+
         if x is not None and y is not None:
             self.draw(x, y)
 
@@ -134,10 +140,9 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         :return: None.
         """
-        try:
+        if self.bits_per_second_edit.text().isdigit():
+            self.signal_generator.bits_per_second = float(self.bits_per_second_edit.text())
             self.signal_generator.signal_freq = float(self.signal_freq_edit.text())
-        except ValueError:
-            pass
 
     def time_delay_change_logic(self):
         """
