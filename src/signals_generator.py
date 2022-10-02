@@ -118,7 +118,7 @@ class SignalGenerator:
             bit_index = int(t / bit_time)
             bipolar_bit = -1 if self.bits[bit_index] == 0 else 1
             arg = w * t
-            value = bipolar_bit * math.cos(arg)
+            value = bipolar_bit * math.sin(arg)
 
             # Заполнение списка отсчетов/значений
             x.append(t)
