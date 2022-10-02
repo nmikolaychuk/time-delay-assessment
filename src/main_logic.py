@@ -2,8 +2,9 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from main_interface import Ui_MainWindow
-from mpl_widget import MplGraphics
+from mpl_widget import MplGraphicsModulated
 from signals_generator import SignalGenerator
+from enums import *
 from defaults import *
 
 
@@ -71,20 +72,29 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.time_delay_edit.textChanged.connect(self.time_delay_change_logic)
         self.snr_edit.textChanged.connect(self.snr_change_logic)
 
-        # Инициализация графиков
-        self.graphics = MplGraphics()
+        # Инициализация основных графиков
+        self.graphics = MplGraphicsModulated()
         self.toolbar = NavigationToolbar(self.graphics, self.graphics, coordinates=True)
         self.verticalLayout_16.addWidget(self.toolbar)
         self.verticalLayout_16.addWidget(self.graphics)
 
-    def draw(self, x, y):
+    def draw(self, graph_type: GraphType,  x: list, y: list):
         """
         Нарисовать график.
 
         :return: None.
         """
-        self.graphics.clear_plot()
-        self.graphics.plot_graph(x, y)
+
+        if graph_type == GraphType.MODULATED:
+            self.graphics.clear_plot_ax1()
+            self.graphics.plot_graph_ax1(x, y)
+        elif graph_type == GraphType.RESEARCH:
+            self.graphics.clear_plot_ax2()
+            self.graphics.plot_graph_ax2(x, y)
+        elif graph_type == GraphType.CORRELATION:
+            self.graphics.clear_plot_ax3()
+            self.graphics.plot_graph_ax3(x, y)
+
         self.graphics.draw()
         self.graphics.flush_events()
 
@@ -96,16 +106,24 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         x, y = None, None
         if self.am_manipulation_radio.isChecked():
-            x, y = self.signal_generator.get_ampl_modulated_signal()
+            self.signal_generator.calc_ampl_modulated_signal()
+            x, y = self.signal_generator.modulated_signal
 
         elif self.fm2_manipulation_radio.isChecked():
-            x, y = self.signal_generator.get_fm2_modulated_signal()
+            self.signal_generator.calc_fm2_modulated_signal()
+            x, y = self.signal_generator.modulated_signal
 
         elif self.mchm_manipulation_radio.isChecked():
-            x, y = self.signal_generator.get_freq_modulated_signal()
+            self.signal_generator.calc_freq_modulated_signal()
+            x, y = self.signal_generator.modulated_signal
 
         if x is not None and y is not None:
-            self.draw(x, y)
+            # Генерация исследуемого сигнала
+            self.signal_generator.calc_research_signal()
+            self.draw(GraphType.MODULATED, x, y)
+            self.draw(GraphType.RESEARCH,
+                      self.signal_generator.research_signal[0],
+                      self.signal_generator.research_signal[1])
 
     def sr_change_logic(self):
         """
