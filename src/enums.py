@@ -8,3 +8,20 @@ class GraphType(Enum):
     MODULATED = 0
     RESEARCH = 1
     CORRELATION = 2
+
+
+class SignalType(Enum):
+    """
+    Типы сигналов для модуляции
+    """
+    GENERAL = 0
+    RESEARCH = 1
+
+
+class ModulationType(Enum):
+    """
+    Типы модуляции.
+    """
+    AM = 0
+    FM = 1
+    PM = 2

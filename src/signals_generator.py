@@ -3,6 +3,7 @@ import math
 import numpy as np
 
 from defaults import *
+from enums import SignalType, ModulationType
 
 
 class SignalGenerator:
@@ -17,7 +18,7 @@ class SignalGenerator:
         # Параметры сигнала
         self.sampling_rate = float(s_r)
         self.signal_freq = float(s_freq)
-        self.bits_count = float(b_count)
+        self.bits_count = int(b_count)
         self.bits_per_second = float(bps)
         self.time_delay = float(t_delay)
         self.snr = float(snr)
@@ -28,178 +29,121 @@ class SignalGenerator:
         self.general_signal = []
         self.modulated_signal = []
         self.research_signal = []
+        self.correlation_signal = []
 
         # Параметры для АМ
-        # Амплитуда, дБ
+        # Амплитуда, B
         self.low_ampl = 1.
         self.high_ampl = 0.5
 
         # Параметры для ФМ
-        # Индек модуляции
+        # Индекc модуляции
         self.mod_index = 2.
+
+        # Расчет параметров
+        # Минимальная и максимальная частота,Гц
         self.low_freq = 2. * math.pi * self.signal_freq
         self.high_freq = self.mod_index * self.low_freq
 
-    def _generate_bits(self):
+        # Параметры большого сигнала
+        self.rsch_signal_freq = self.signal_freq
+        self.rsch_bits_count = int(self.bits_count * 3)
+
+    @staticmethod
+    def _generate_bits(bits_count):
         """
         Формирование случайной битовой информационной последовательности.
         """
-        self.bits.clear()
-        for i in range(int(self.bits_count)):
+        bits = []
+        for i in range(int(bits_count)):
             x = random.randint(0, 1)
-            self.bits.append(x)
+            bits.append(x)
 
-    def _get_signal_parameters(self):
+        return bits
+
+    def recalc_parameters(self):
+        """
+        Пересчет параметров, задаваемых с окна.
+        """
+        # Минимальная и максимальная частота,Гц
+        self.low_freq = 2. * math.pi * self.signal_freq
+        self.high_freq = self.mod_index * self.low_freq
+
+        # Параметры большого сигнала
+        self.rsch_signal_freq = self.signal_freq
+        self.rsch_bits_count = int(self.bits_count * 3)
+
+    def _get_signal_parameters(self, sf: float, bits_count: int):
         """
         Рассчитать параметры сигналов.
         """
-        # Опорная частота, Гц
-        signal_freq = self.signal_freq * 1000
-        # Частота дискретизации, Гц
-        sampling_rate = self.sampling_rate * 1000
-
         # Длительность одного бита
         bit_time = 1. / self.bits_per_second
         # Длительность сигнала
-        signal_duration = bit_time * self.bits_count
+        signal_duration = bit_time * bits_count
         # Частота опорного сигнала
-        w = 2. * math.pi * signal_freq
+        w = 2. * math.pi * sf
         # Количество отсчётов сигнала
-        n = sampling_rate * signal_duration
+        n = self.sampling_rate * signal_duration
         # Шаг времени
         timestep = signal_duration / n
         return signal_duration, timestep, bit_time, w
 
-    def calc_triple_general_signal(self):
-        """
-        Получить утроенный опорный сигнал на другой частоте.
-        """
-        self.research_signal.clear()
-
-        # Опорная частота, Гц
-        signal_freq = self.signal_freq * 1000 * 0.95
-        # Частота дискретизации, Гц
-        sampling_rate = self.sampling_rate * 1000
-
-        x, y = [], []
-        # Длительность одного бита
-        bit_time = 1. / self.bits_per_second
-        # Длительность сигнала
-        signal_duration = bit_time * self.bits_count * 3
-        # Частота опорного сигнала
-        w = 2. * math.pi * signal_freq
-        # Количество отсчётов сигнала
-        n = sampling_rate * signal_duration
-        # Шаг времени
-        timestep = signal_duration / n
-
-        for t in np.arange(0, signal_duration, timestep):
-            x.append(t)
-            y.append(math.sin(w * t))
-
-        self.research_signal = [x, y]
-
-    def calc_general_signal(self):
-        """
-        Получить опорный сигнал.
-        """
-        self._generate_bits()
-        self.general_signal.clear()
-
-        x, y = [], []
-        signal_duration, timestep, _, w = self._get_signal_parameters()
-        for t in np.arange(0, signal_duration, timestep):
-            x.append(t)
-            y.append(math.sin(w * t))
-
-        self.general_signal = [x, y]
-
-    def calc_ampl_modulated_signal(self):
+    def calc_modulated_signal(self, signal_type: SignalType, modulation_type: ModulationType):
         """
         Построить амплитудно-манипулированный сигнал.
         """
-        # Перегенерация случайных бит
-        self._generate_bits()
-        self.modulated_signal.clear()
-
-        x, y = [], []
-        signal_duration, timestep, bit_time, w = self._get_signal_parameters()
-        for t in np.arange(0, signal_duration, timestep):
-            # Смена амплитуды
-            bit_index = int(t / bit_time)
-            ampl_value = self.low_ampl if self.bits[bit_index] == 0 else self.high_ampl
-            value = ampl_value * math.sin(w * t)
-
-            # Заполнение списка отсчетов\значений
-            x.append(t)
-            y.append(value)
-
-        self.modulated_signal = [x, y]
-
-    def calc_fm2_modulated_signal(self):
-        """
-        Построить ФМ2-манипулированный сигнал.
-        """
-        # Перегенерация случайных бит
-        self._generate_bits()
-        self.modulated_signal.clear()
-
-        x, y = [], []
-        signal_duration, timestep, bit_time, w = self._get_signal_parameters()
-        for t in np.arange(0, signal_duration, timestep):
-            bit_index = int(t / bit_time)
-            bipolar_bit = -1 if self.bits[bit_index] == 0 else 1
-            arg = w * t
-            value = bipolar_bit * math.sin(arg)
-
-            # Заполнение списка отсчетов/значений
-            x.append(t)
-            y.append(value)
-
-        self.modulated_signal = [x, y]
-
-    def calc_freq_modulated_signal(self):
-        """
-        Построить частотно-манипулированный сигнал.
-        """
-        # Перегенерация случайных бит
-        self._generate_bits()
-        self.modulated_signal.clear()
         self.signal_phase = 0
+        # Характеристики сигнала в зависимости от его типа
+        bits_count = self.bits_count
+        signal_freq = self.signal_freq
+        if signal_type == SignalType.RESEARCH:
+            bits_count = self.rsch_bits_count
+            signal_freq = self.rsch_signal_freq
 
-        # Частота, соответствующая логическому "0"
-        low_freq = self.low_freq * 1000
-        # Частота, соответствующая логическому "1"
-        high_freq = self.high_freq * 1000
+        # Перегенерация случайных бит
+        bits = self._generate_bits(bits_count)
 
+        # Перегенерация случайных бит
+        if signal_type == SignalType.GENERAL:
+            self.bits = bits
+
+        # Получение параметров сигнала
         x, y = [], []
-        signal_duration, timestep, bit_time, w = self._get_signal_parameters()
+        signal_duration, timestep, bit_time, w = self._get_signal_parameters(signal_freq, bits_count)
         for t in np.arange(0, signal_duration, timestep):
-            # Смена частоты
+            # Получение текущего бита
             bit_index = int(t / bit_time)
-            bit_value = -1 if self.bits[bit_index] == 0 else 1
-            freq = low_freq if bit_value == -1 else high_freq
-            value = math.sin(freq * t + self.signal_phase)
-            self.signal_phase = freq * t
+            # Модуляция
+            if modulation_type == ModulationType.AM:
+                ampl_value = self.low_ampl if bits[bit_index] == 0 else self.high_ampl
+                value = ampl_value * math.sin(w * t)
+            elif modulation_type == ModulationType.FM:
+                bipolar_bit = -1 if bits[bit_index] == 0 else 1
+                value = bipolar_bit * math.sin(w * t)
+            elif modulation_type == ModulationType.PM:
+                bit_value = -1 if bits[bit_index] == 0 else 1
+                freq = self.low_freq if bit_value == -1 else self.high_freq
+                value = math.sin(freq * t + self.signal_phase)
+                self.signal_phase = freq * t
+            else:
+                return None, None
 
             # Заполнение списка отсчетов\значений
             x.append(t)
             y.append(value)
 
-        self.modulated_signal = [x, y]
+        return x, y
 
     def calc_research_signal(self):
         """
         Получить исследуемый сигнал, в котором присутствует сдвинутая копия опорного сигнала.
         """
-        if not self.modulated_signal:
+        if not self.modulated_signal or not self.research_signal:
             return
 
-        # Получение исследуемого сигнала (утроенный с измененной частотой)
-        self.calc_triple_general_signal()
         # Полученые временной задержки
         time_delay = self.time_delay / 1000
-
         if time_delay > self.research_signal[0][-1] - self.modulated_signal[0][-1]:
             return
 
@@ -213,3 +157,87 @@ class SignalGenerator:
         signal_len = len(self.modulated_signal[0])
         new_signal = self.research_signal[1][:idx] + self.modulated_signal[1] + self.research_signal[1][idx+signal_len:]
         self.research_signal[1] = new_signal
+
+    @staticmethod
+    def _calc_signal_energy(signal: list):
+        """
+        Расчет энергии сигнала
+        """
+        energy = 0.
+        for i in range(len(signal[1])):
+            energy += signal[1][i] ** 2
+        return energy
+
+    @staticmethod
+    def _get_random_value():
+        """
+        Рандомизация чисел для шума
+        """
+        av = 12
+        value = 0.
+        for i in range(av):
+            value += random.uniform(-1, 1)
+        return value / av
+
+    def generate_noise(self, signal_type: SignalType):
+        """
+        Генерация шума для сигнала
+        """
+        snr = None
+        signal = None
+        if signal_type == SignalType.GENERAL:
+            snr = 10
+            signal = self.modulated_signal
+        elif signal_type == SignalType.RESEARCH:
+            snr = self.snr
+            signal = self.research_signal
+
+        if not signal:
+            return
+
+        # Расчет энергии сигнала
+        signal_energy = self._calc_signal_energy(signal)
+        # Расчет энергии шума
+        noise_energy = signal_energy / (10 ** (snr / 10))
+        # Процент шума
+        noise_percent = signal_energy / noise_energy / 100.
+
+        # Случайная шумовая добавка к каждому отсчету
+        noise = []
+        random_energy = 0.
+        for i in range(len(signal[1])):
+            random_value = self._get_random_value()
+            noise.append(random_value)
+            random_energy += random_value ** 2
+
+        # Разброс шума
+        alpha = math.sqrt(noise_percent * signal_energy / random_energy)
+        # Зашумленный сигнал
+        noise_signal = []
+        for i in range(len(signal[1])):
+            noise_signal.append(signal[1][i] + alpha * noise[i])
+
+        return signal[0], noise_signal
+
+    def get_correlation(self):
+        """
+        Расчет взаимной корреляционной функции опорного и исследуемого сигналов.
+        """
+        if not self.modulated_signal or not self.research_signal:
+            return
+
+        # Очистка буфера
+        self.correlation_signal.clear()
+
+        x, y = [], []
+        small_signal_length = len(self.modulated_signal[0])
+        big_signal_length = len(self.research_signal[0])
+        for i in range(0, big_signal_length - small_signal_length - 1):
+            summary = 0.
+            for j in range(small_signal_length):
+                summary += self.modulated_signal[1][j] * self.research_signal[1][i + j]
+
+            x.append(i)
+            y.append(summary)
+
+        self.correlation_signal = [x, y]

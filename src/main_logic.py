@@ -104,26 +104,48 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         :return: None.
         """
+        # Пересчет параметров
+        self.signal_generator.recalc_parameters()
+
         x, y = None, None
+        xr, yr = None, None
         if self.am_manipulation_radio.isChecked():
-            self.signal_generator.calc_ampl_modulated_signal()
-            x, y = self.signal_generator.modulated_signal
-
+            x, y = self.signal_generator.calc_modulated_signal(SignalType.GENERAL, ModulationType.AM)
+            xr, yr = self.signal_generator.calc_modulated_signal(SignalType.RESEARCH, ModulationType.AM)
+            self.signal_generator.modulated_signal = [x, y]
+            self.signal_generator.research_signal = [xr, yr]
         elif self.fm2_manipulation_radio.isChecked():
-            self.signal_generator.calc_fm2_modulated_signal()
-            x, y = self.signal_generator.modulated_signal
-
+            x, y = self.signal_generator.calc_modulated_signal(SignalType.GENERAL, ModulationType.FM)
+            xr, yr = self.signal_generator.calc_modulated_signal(SignalType.RESEARCH, ModulationType.FM)
+            self.signal_generator.modulated_signal = [x, y]
+            self.signal_generator.research_signal = [xr, yr]
         elif self.mchm_manipulation_radio.isChecked():
-            self.signal_generator.calc_freq_modulated_signal()
-            x, y = self.signal_generator.modulated_signal
+            x, y = self.signal_generator.calc_modulated_signal(SignalType.GENERAL, ModulationType.PM)
+            xr, yr = self.signal_generator.calc_modulated_signal(SignalType.RESEARCH, ModulationType.PM)
+            self.signal_generator.modulated_signal = [x, y]
+            self.signal_generator.research_signal = [xr, yr]
 
-        if x is not None and y is not None:
+        # Вставка маленького сигнала в большой
+        self.signal_generator.calc_research_signal()
+        # Добавление шума
+        self.signal_generator.modulated_signal = self.signal_generator.generate_noise(SignalType.GENERAL)
+        self.signal_generator.research_signal = self.signal_generator.generate_noise(SignalType.RESEARCH)
+        # Расчет взаимной корреляционной функции
+        self.signal_generator.get_correlation()
+        # Отрисовка
+        if self.signal_generator.modulated_signal and \
+            self.signal_generator.research_signal and \
+                self.signal_generator.correlation_signal:
             # Генерация исследуемого сигнала
-            self.signal_generator.calc_research_signal()
-            self.draw(GraphType.MODULATED, x, y)
+            self.draw(GraphType.MODULATED,
+                      self.signal_generator.modulated_signal[0],
+                      self.signal_generator.modulated_signal[1])
             self.draw(GraphType.RESEARCH,
                       self.signal_generator.research_signal[0],
                       self.signal_generator.research_signal[1])
+            self.draw(GraphType.CORRELATION,
+                      self.signal_generator.correlation_signal[0],
+                      self.signal_generator.correlation_signal[1])
 
     def sr_change_logic(self):
         """
@@ -158,8 +180,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         :return: None.
         """
-        if self.bits_per_second_edit.text().isdigit():
-            self.signal_generator.bits_per_second = float(self.bits_per_second_edit.text())
+        if self.signal_freq_edit.text().isdigit():
             self.signal_generator.signal_freq = float(self.signal_freq_edit.text())
 
     def time_delay_change_logic(self):
