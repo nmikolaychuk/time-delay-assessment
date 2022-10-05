@@ -4,6 +4,102 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
+class MplGraphicsHelped(FigureCanvas):
+    """
+    Функция отрисовки
+    """
+    def __init__(self, dpi=100):
+        self.fig = Figure(dpi=dpi, facecolor=(.94, .94, .94, 0.), figsize=(4, 3))
+
+        # Добавление области графа
+        self.ax = self.fig.add_subplot(111)
+        self.add_text()
+
+        # Инициализация
+        FigureCanvas.__init__(self, self.fig)
+        FigureCanvas.setSizePolicy(self, QtWidgets.QSizePolicy.Policy.Expanding,
+                                   QtWidgets.QSizePolicy.Policy.Expanding)
+        FigureCanvas.updateGeometry(self)
+
+    def add_text(self):
+        """
+        Инициализация графика.
+
+        :return: None.
+        """
+        # Инициализация области графика модулированного сигнала
+        self.ax.set_title("Последовательность информационных бит")
+        self.ax.grid(linestyle="dotted", alpha=0.65)
+
+    def plot_graph(self, x_list: list, y_list: list):
+        """
+        Построение графика функции модулированного сигнала.
+
+        :param x_list: Список временный отсчётов.
+        :param y_list: Список значений.
+        :return: None.
+        """
+        self.ax.plot(x_list, y_list, linestyle="-", markersize=2, color='r')
+        self.ax.margins(y=0.8)
+
+    def clear_plot(self):
+        """
+        Очистка области графика.
+
+        :return: None.
+        """
+        self.ax.clear()
+        self.add_text()
+
+
+class MplGraphicsResearch(FigureCanvas):
+    """
+    Функция отрисовки
+    """
+    def __init__(self, dpi=100):
+        self.fig = Figure(dpi=dpi, facecolor=(.94, .94, .94, 0.), figsize=(4, 3))
+
+        # Добавление области графа
+        self.ax = self.fig.add_subplot(111)
+        self.add_text()
+
+        # Инициализация
+        FigureCanvas.__init__(self, self.fig)
+        FigureCanvas.setSizePolicy(self, QtWidgets.QSizePolicy.Policy.Expanding,
+                                   QtWidgets.QSizePolicy.Policy.Expanding)
+        FigureCanvas.updateGeometry(self)
+
+    def add_text(self):
+        """
+        Инициализация графика.
+
+        :return: None.
+        """
+        # Инициализация области графика модулированного сигнала
+        self.ax.set_title("График зависимости доверительной вероятности от SNR")
+        self.ax.grid(linestyle="dotted", alpha=0.65)
+
+    def plot_graph(self, x_list: list, y_list: list):
+        """
+        Построение графика функции модулированного сигнала.
+
+        :param x_list: Список временный отсчётов.
+        :param y_list: Список значений.
+        :return: None.
+        """
+        self.ax.plot(x_list, y_list, linestyle="-", markersize=2, color='r')
+        self.ax.margins(y=0.8)
+
+    def clear_plot(self):
+        """
+        Очистка области графика.
+
+        :return: None.
+        """
+        self.ax.clear()
+        self.add_text()
+
+
 class MplGraphicsModulated(FigureCanvas):
     """
     Функция отрисовки

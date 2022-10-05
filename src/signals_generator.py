@@ -1,5 +1,4 @@
 import random
-import math
 import numpy as np
 
 from defaults import *
@@ -34,15 +33,15 @@ class SignalGenerator:
         # Параметры для АМ
         # Амплитуда, B
         self.low_ampl = 1.
-        self.high_ampl = 2.
+        self.high_ampl = 10.
 
         # Параметры для ФМ
         # Индекc модуляции
-        self.mod_index = 2.
+        self.mod_index = 0.5
 
         # Расчет параметров
         # Минимальная и максимальная частота,Гц
-        self.low_freq = 2. * math.pi * self.signal_freq
+        self.low_freq = 2. * np.pi * self.signal_freq
         self.high_freq = self.mod_index * self.low_freq
 
         # Параметры большого сигнала
@@ -59,14 +58,14 @@ class SignalGenerator:
             x = random.randint(0, 1)
             bits.append(x)
 
-        return bits
+        return np.array(bits)
 
     def recalc_parameters(self):
         """
         Пересчет параметров, задаваемых с окна.
         """
         # Минимальная и максимальная частота,Гц
-        self.low_freq = 2. * math.pi * self.signal_freq
+        self.low_freq = 2. * np.pi * self.signal_freq
         self.high_freq = self.mod_index * self.low_freq
 
         # Параметры большого сигнала
@@ -82,7 +81,7 @@ class SignalGenerator:
         # Длительность сигнала
         signal_duration = bit_time * bits_count
         # Частота опорного сигнала
-        w = 2. * math.pi * sf
+        w = 2. * np.pi * sf
         # Количество отсчётов сигнала
         n = self.sampling_rate * signal_duration
         # Шаг времени
@@ -117,14 +116,14 @@ class SignalGenerator:
             # Модуляция
             if modulation_type == ModulationType.AM:
                 ampl_value = self.low_ampl if bits[bit_index] == 0 else self.high_ampl
-                value = ampl_value * math.sin(w * t)
+                value = ampl_value * np.sin(w * t)
             elif modulation_type == ModulationType.FM:
                 bit_value = -1 if bits[bit_index] == 0 else 1
-                value = bit_value * math.sin(w * t)
+                value = bit_value * np.sin(w * t)
             elif modulation_type == ModulationType.PM:
                 bit_value = -1 if bits[bit_index] == 0 else 1
                 freq = self.low_freq if bit_value == -1 else self.high_freq
-                value = math.sin(freq * t + self.signal_phase)
+                value = np.sin(freq * t + self.signal_phase)
                 self.signal_phase = freq * t
             else:
                 return None, None
@@ -195,12 +194,8 @@ class SignalGenerator:
         if not signal:
             return
 
-        # Расчет энергии сигнала
-        signal_energy = self._calc_signal_energy(signal)
         # Расчет энергии шума
-        noise_energy = signal_energy / (10 ** (snr / 10))
-        # Процент шума
-        noise_percent = (signal_energy / noise_energy - 1) / 100.
+        alpha = 1 / (10 ** (snr / 10))
 
         # Случайная шумовая добавка к каждому отсчету
         noise = []
@@ -210,8 +205,6 @@ class SignalGenerator:
             noise.append(random_value)
             random_energy += random_value ** 2
 
-        # Разброс шума
-        alpha = math.sqrt(noise_percent * signal_energy / random_energy)
         # Зашумленный сигнал
         noise_signal = []
         for i in range(len(signal[1])):
@@ -232,15 +225,13 @@ class SignalGenerator:
         x, y = [], []
         small_signal_length = len(self.modulated_signal[0])
         big_signal_length = len(self.research_signal[0])
-        for i in range(0, big_signal_length - small_signal_length - 1):
-            summary = 0.
-            for j in range(small_signal_length):
-                value = self.modulated_signal[1][j] * self.research_signal[1][i + j]
-                summary += value
-            summary /= small_signal_length
+        modulated = np.array(self.modulated_signal[1])
+        research = np.array(self.research_signal[1])
+        for i in np.arange(0, big_signal_length - small_signal_length - 1):
+            summary = np.sum(np.multiply(modulated, research[i:small_signal_length+i])) / small_signal_length
 
             x.append(self.research_signal[0][i])
-            y.append(math.fabs(summary))
+            y.append(np.abs(summary))
 
         self.correlation_signal = [x, y]
 

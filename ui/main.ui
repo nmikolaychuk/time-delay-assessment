@@ -149,10 +149,10 @@ border: none;</string>
               <widget class="QLabel" name="application_name_label">
                <property name="font">
                 <font>
-                 <family>Arial</family>
+                 <family>Century Gothic</family>
                  <pointsize>12</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -238,10 +238,10 @@ border: none;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Arial</family>
+                 <family>Century Gothic</family>
                  <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -272,10 +272,10 @@ border: none;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Arial</family>
+                 <family>Century Gothic</family>
                  <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -306,10 +306,10 @@ border: none;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Arial</family>
+                 <family>Century Gothic</family>
                  <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -340,10 +340,10 @@ border: none;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Arial</family>
+                 <family>Century Gothic</family>
                  <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -655,14 +655,14 @@ border: none;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="text">
-                    <string>Частота дискретизации, кГц</string>
+                    <string>Частота дискретизации, Гц</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -679,10 +679,10 @@ border: none;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="text">
@@ -703,10 +703,10 @@ border: none;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="text">
@@ -727,14 +727,14 @@ border: none;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="text">
-                    <string>Несущая частота, кГц</string>
+                    <string>Несущая частота, Гц</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -751,10 +751,10 @@ border: none;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="text">
@@ -775,10 +775,10 @@ border: none;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="text">
@@ -832,10 +832,10 @@ border: none;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -857,10 +857,10 @@ border-radius: 10px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -882,10 +882,10 @@ border-radius: 10px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -913,10 +913,10 @@ border-radius: 10px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -938,10 +938,10 @@ border-radius: 10px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -963,10 +963,10 @@ border-radius: 10px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -1027,7 +1027,7 @@ border-radius: 10px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>16</pointsize>
                     </font>
                    </property>
@@ -1106,6 +1106,9 @@ border-radius: 20px;</string>
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_15">
+                 <property name="leftMargin">
+                  <number>9</number>
+                 </property>
                  <item>
                   <widget class="QRadioButton" name="am_manipulation_radio">
                    <property name="minimumSize">
@@ -1116,10 +1119,10 @@ border-radius: 20px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -1143,10 +1146,10 @@ border-radius: 20px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -1167,10 +1170,10 @@ border-radius: 20px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -1178,6 +1181,60 @@ border-radius: 20px;</string>
                    </property>
                    <property name="text">
                     <string>МЧМ-манипуляция</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeType">
+                    <enum>QSizePolicy::Fixed</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="time_delay_assessment_edit">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>Century Gothic</family>
+                     <pointsize>10</pointsize>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: 1px solid black;
+border-radius: 10px;</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label">
+                   <property name="font">
+                    <font>
+                     <family>Century Gothic</family>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Оценка временной задержки</string>
                    </property>
                   </widget>
                  </item>
@@ -1204,10 +1261,10 @@ border-radius: 20px;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>Arial</family>
+                     <family>Century Gothic</family>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -1226,41 +1283,154 @@ border-radius: 15px;</string>
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="help_page">
-             <layout class="QVBoxLayout" name="verticalLayout_10">
-              <item alignment="Qt::AlignHCenter">
-               <widget class="QLabel" name="label_3">
-                <property name="font">
-                 <font>
-                  <family>Arial</family>
-                  <pointsize>36</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
+            <widget class="QWidget" name="research_page">
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <item>
+               <widget class="QFrame" name="frame_3">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
                 </property>
-                <property name="text">
-                 <string>Вспомогательное</string>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
                 </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_10">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item alignment="Qt::AlignRight">
+               <widget class="QFrame" name="frame_4">
+                <property name="styleSheet">
+                 <string notr="true">border: 1px solid black;
+border-radius: 20px;</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_13">
+                 <item>
+                  <widget class="QLineEdit" name="average_count_edit">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>Century Gothic</family>
+                     <pointsize>10</pointsize>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: 1px solid black;
+border-radius: 10px;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_3">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>Century Gothic</family>
+                     <pointsize>10</pointsize>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Количество усреднений</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_5">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="start_research_button">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>Century Gothic</family>
+                     <pointsize>10</pointsize>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(21, 28, 77);
+color: rgb(255, 255, 255);
+border: 1px solid black;
+border-radius: 15px;</string>
+                   </property>
+                   <property name="text">
+                    <string>Запустить</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="research_page">
+            <widget class="QWidget" name="help_page">
              <layout class="QVBoxLayout" name="verticalLayout_11">
-              <item alignment="Qt::AlignHCenter">
-               <widget class="QLabel" name="label_4">
-                <property name="font">
-                 <font>
-                  <family>Arial</family>
-                  <pointsize>36</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_17">
+                <property name="spacing">
+                 <number>0</number>
                 </property>
-                <property name="text">
-                 <string>Исследование</string>
-                </property>
-               </widget>
+               </layout>
               </item>
              </layout>
             </widget>

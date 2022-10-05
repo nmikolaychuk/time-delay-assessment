@@ -2,7 +2,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from main_interface import Ui_MainWindow
-from mpl_widget import MplGraphicsModulated
+from mpl_widget import MplGraphicsModulated, MplGraphicsHelped, MplGraphicsResearch
 from signals_generator import SignalGenerator
 from enums import *
 from defaults import *
@@ -78,6 +78,18 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.verticalLayout_16.addWidget(self.toolbar)
         self.verticalLayout_16.addWidget(self.graphics)
 
+        # Инициализация вспомогательных графиков
+        self.helped_graphics = MplGraphicsHelped()
+        self.helped_toolbar = NavigationToolbar(self.helped_graphics, self.helped_graphics, coordinates=True)
+        self.verticalLayout_17.addWidget(self.helped_toolbar)
+        self.verticalLayout_17.addWidget(self.helped_graphics)
+
+        # Инициализация графика исследования
+        self.research_graphics = MplGraphicsResearch()
+        self.research_toolbar = NavigationToolbar(self.research_graphics, self.research_graphics, coordinates=True)
+        self.verticalLayout_10.addWidget(self.research_toolbar)
+        self.verticalLayout_10.addWidget(self.research_graphics)
+
     def draw(self, graph_type: GraphType,  x: list, y: list):
         """
         Нарисовать график.
@@ -124,15 +136,17 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Вставка маленького сигнала в большой
         self.signal_generator.calc_research_signal()
+
         # Добавление шума
         self.signal_generator.modulated_signal = self.signal_generator.generate_noise(SignalType.GENERAL)
         self.signal_generator.research_signal = self.signal_generator.generate_noise(SignalType.RESEARCH)
+
         # Расчет взаимной корреляционной функции
         self.signal_generator.get_correlation()
 
         # Оценка временной задержки
         time_delay = self.signal_generator.find_correlation_max()
-        print("Оценка временной задержки:", time_delay)
+        self.time_delay_assessment_edit.setText(str(time_delay) + " мс")
 
         # Отрисовка
         if self.signal_generator.modulated_signal and \
@@ -200,8 +214,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         :return: None.
         """
-        if self.snr_edit.text().isdigit():
+        try:
             self.signal_generator.snr = float(self.snr_edit.text())
+        except ValueError:
+            pass
 
     def restore_or_maximized(self):
         """
