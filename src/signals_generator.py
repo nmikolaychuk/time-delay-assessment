@@ -34,7 +34,7 @@ class SignalGenerator:
         # Параметры для АМ
         # Амплитуда, B
         self.low_ampl = 1.
-        self.high_ampl = 0.5
+        self.high_ampl = 2.
 
         # Параметры для ФМ
         # Индекc модуляции
@@ -119,8 +119,8 @@ class SignalGenerator:
                 ampl_value = self.low_ampl if bits[bit_index] == 0 else self.high_ampl
                 value = ampl_value * math.sin(w * t)
             elif modulation_type == ModulationType.FM:
-                bipolar_bit = -1 if bits[bit_index] == 0 else 1
-                value = bipolar_bit * math.sin(w * t)
+                bit_value = -1 if bits[bit_index] == 0 else 1
+                value = bit_value * math.sin(w * t)
             elif modulation_type == ModulationType.PM:
                 bit_value = -1 if bits[bit_index] == 0 else 1
                 freq = self.low_freq if bit_value == -1 else self.high_freq
@@ -200,7 +200,7 @@ class SignalGenerator:
         # Расчет энергии шума
         noise_energy = signal_energy / (10 ** (snr / 10))
         # Процент шума
-        noise_percent = signal_energy / noise_energy / 100.
+        noise_percent = (signal_energy / noise_energy - 1) / 100.
 
         # Случайная шумовая добавка к каждому отсчету
         noise = []
@@ -235,9 +235,21 @@ class SignalGenerator:
         for i in range(0, big_signal_length - small_signal_length - 1):
             summary = 0.
             for j in range(small_signal_length):
-                summary += self.modulated_signal[1][j] * self.research_signal[1][i + j]
+                value = self.modulated_signal[1][j] * self.research_signal[1][i + j]
+                summary += value
+            summary /= small_signal_length
 
-            x.append(i)
-            y.append(summary)
+            x.append(self.research_signal[0][i])
+            y.append(math.fabs(summary))
 
         self.correlation_signal = [x, y]
+
+    def find_correlation_max(self):
+        """
+        Нахождение максимума корреляционной функции
+        """
+        if not self.correlation_signal:
+            return
+
+        max_element_idx = self.correlation_signal[1].index(max(self.correlation_signal[1]))
+        return self.correlation_signal[0][max_element_idx]

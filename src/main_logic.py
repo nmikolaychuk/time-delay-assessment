@@ -106,9 +106,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         # Пересчет параметров
         self.signal_generator.recalc_parameters()
-
-        x, y = None, None
-        xr, yr = None, None
         if self.am_manipulation_radio.isChecked():
             x, y = self.signal_generator.calc_modulated_signal(SignalType.GENERAL, ModulationType.AM)
             xr, yr = self.signal_generator.calc_modulated_signal(SignalType.RESEARCH, ModulationType.AM)
@@ -132,6 +129,11 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.signal_generator.research_signal = self.signal_generator.generate_noise(SignalType.RESEARCH)
         # Расчет взаимной корреляционной функции
         self.signal_generator.get_correlation()
+
+        # Оценка временной задержки
+        time_delay = self.signal_generator.find_correlation_max()
+        print("Оценка временной задержки:", time_delay)
+
         # Отрисовка
         if self.signal_generator.modulated_signal and \
             self.signal_generator.research_signal and \
