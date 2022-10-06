@@ -74,29 +74,24 @@ class MplGraphicsResearch(FigureCanvas):
     def add_text(self):
         """
         Инициализация графика.
-
-        :return: None.
         """
         # Инициализация области графика модулированного сигнала
-        self.ax.set_title("График зависимости доверительной вероятности от SNR")
+        self.ax.set_title("График зависимости BER от SNR")
         self.ax.grid(linestyle="dotted", alpha=0.65)
 
-    def plot_graph(self, x_list: list, y_list: list):
+    def plot_graph(self, x_am: list, y_am: list, x_fm: list, y_fm: list, x_pm: list, y_pm: list):
         """
         Построение графика функции модулированного сигнала.
-
-        :param x_list: Список временный отсчётов.
-        :param y_list: Список значений.
-        :return: None.
         """
-        self.ax.plot(x_list, y_list, linestyle="-", markersize=2, color='r')
+        self.ax.plot(x_am, y_am, linestyle="-", markersize=2, color='r', label="АМ")
+        self.ax.plot(x_fm, y_fm, linestyle="-", markersize=2, color='g', label="FМ")
+        self.ax.plot(x_pm, y_pm, linestyle="-", markersize=2, color='b', label="PМ")
+        self.ax.legend(loc="upper right", framealpha=1.0)
         self.ax.margins(y=0.8)
 
     def clear_plot(self):
         """
         Очистка области графика.
-
-        :return: None.
         """
         self.ax.clear()
         self.add_text()

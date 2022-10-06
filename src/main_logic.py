@@ -4,6 +4,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from main_interface import Ui_MainWindow
 from mpl_widget import MplGraphicsModulated, MplGraphicsHelped, MplGraphicsResearch
 from signals_generator import SignalGenerator
+from research_logic import calc_research
 from enums import *
 from defaults import *
 
@@ -51,6 +52,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.side_menu_button.clicked.connect(self.slide_left_menu)
         self.draw_button.clicked.connect(self.draw_main_page_graphics)
         self.start_calc_button.clicked.connect(lambda: self.open_main_page_button.click())
+        self.start_research_button.clicked.connect(self.start_research_logic)
 
         # Инициализация значений по умолчанию
         self.stacked_widget.setCurrentWidget(self.parameters_page)
@@ -62,6 +64,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.bits_per_second_edit.setText(DEFAULT_BITS_PER_SECOND)
         self.signal_freq_edit.setText(DEFAULT_SIGNAL_FREQ)
         self.time_delay_edit.setText(DEFAULT_TIME_DELAY)
+        self.average_count_edit.setText(DEFAULT_AVERAGE_COUNT)
         self.signal_generator = SignalGenerator()
 
         # Обработка событий редактирования параметров
@@ -90,13 +93,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.verticalLayout_10.addWidget(self.research_toolbar)
         self.verticalLayout_10.addWidget(self.research_graphics)
 
-    def draw(self, graph_type: GraphType,  x: list, y: list):
+    def draw(self, graph_type: GraphType, x: list, y: list):
         """
         Нарисовать график.
-
-        :return: None.
         """
-
         if graph_type == GraphType.MODULATED:
             self.graphics.clear_plot_ax1()
             self.graphics.plot_graph_ax1(x, y)
@@ -120,11 +120,18 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.helped_graphics.draw()
         self.helped_graphics.flush_events()
 
+    def draw_ber_of_snr(self, x_am: list, y_am: list, x_fm: list, y_fm: list, x_pm: list, y_pm: list):
+        """
+        Отобразить график исследования.
+        """
+        self.research_graphics.clear_plot()
+        self.research_graphics.plot_graph(x_am, y_am, x_fm, y_fm, x_pm, y_pm)
+        self.research_graphics.draw()
+        self.research_graphics.flush_events()
+
     def draw_main_page_graphics(self):
         """
         Отрисовка графиков на главной странице.
-
-        :return: None.
         """
         # Пересчет параметров
         self.signal_generator.recalc_parameters()
@@ -148,17 +155,25 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         bits = self.signal_generator.get_bits_to_plot()
 
         # Вставка маленького сигнала в большой
-        self.signal_generator.calc_research_signal()
+        research = self.signal_generator.calc_research_signal(self.signal_generator.modulated_signal,
+                                                              self.signal_generator.research_signal)
+        self.signal_generator.research_signal = research
 
         # Добавление шума
-        self.signal_generator.modulated_signal = self.signal_generator.generate_noise(SignalType.GENERAL)
-        self.signal_generator.research_signal = self.signal_generator.generate_noise(SignalType.RESEARCH)
+        modulated = self.signal_generator.generate_noise(SignalType.GENERAL,
+                                                         self.signal_generator.modulated_signal)
+        self.signal_generator.modulated_signal = modulated
+        researched = self.signal_generator.generate_noise(SignalType.RESEARCH,
+                                                          self.signal_generator.research_signal)
+        self.signal_generator.research_signal = researched
 
         # Расчет взаимной корреляционной функции
-        self.signal_generator.get_correlation()
+        correlation = self.signal_generator.get_correlation(self.signal_generator.modulated_signal,
+                                                            self.signal_generator.research_signal)
+        self.signal_generator.correlation_signal = correlation
 
         # Оценка временной задержки
-        time_delay = self.signal_generator.find_correlation_max()
+        time_delay = self.signal_generator.find_correlation_max(self.signal_generator.correlation_signal)
         self.time_delay_assessment_edit.setText(str(time_delay) + " мс")
 
         # Отрисовка
@@ -179,11 +194,22 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
                       bits[0],
                       bits[1])
 
+    def start_research_logic(self):
+        """
+        Обработчик запуска исследования.
+        """
+        # Запуск исследования
+        try:
+            average_count = int(self.average_count_edit.text())
+        except ValueError:
+            return
+
+        x_am, y_am, x_fm, y_fm, x_pm, y_pm = calc_research(average_count)
+        self.draw_ber_of_snr(x_am, y_am, x_fm, y_fm, x_pm, y_pm)
+
     def sr_change_logic(self):
         """
         Обработка события изменения значения в поле "Частота дискретизации".
-
-        :return: None.
         """
         if self.sampling_rate_edit.text().isdigit():
             self.signal_generator.sampling_rate = float(self.sampling_rate_edit.text())
@@ -191,8 +217,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def bits_count_change_logic(self):
         """
         Обработка события изменения значения в поле "Количество информационных бит".
-
-        :return: None.
         """
         if self.bits_count_edit.text().isdigit():
             self.signal_generator.bits_count = float(self.bits_count_edit.text())
@@ -200,8 +224,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def bits_per_second_change_logic(self):
         """
         Обработка события изменения значения в поле "Скорость передачи данных".
-
-        :return: None.
         """
         if self.bits_per_second_edit.text().isdigit():
             self.signal_generator.bits_per_second = float(self.bits_per_second_edit.text())
@@ -209,8 +231,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def signal_freq_change_logic(self):
         """
         Обработка события изменения значения в поле "Несущая частота".
-
-        :return: None.
         """
         if self.signal_freq_edit.text().isdigit():
             self.signal_generator.signal_freq = float(self.signal_freq_edit.text())
@@ -218,8 +238,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def time_delay_change_logic(self):
         """
         Обработка события изменения значения в поле "Временная задержка".
-
-        :return: None.
         """
         if self.time_delay_edit.text().isdigit():
             self.signal_generator.time_delay = float(self.time_delay_edit.text())
@@ -227,8 +245,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def snr_change_logic(self):
         """
         Обработка события изменения значения в поле "ОСШ".
-
-        :return: None.
         """
         try:
             self.signal_generator.snr = float(self.snr_edit.text())
@@ -238,8 +254,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def restore_or_maximized(self):
         """
         Логика сворачивания и разворачивания окна.
-
-        :return: None.
         """
         current_geometry = self.geometry()
         if current_geometry.width() == self.full_screen_geometry.width() and \
@@ -258,18 +272,12 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def mousePressEvent(self, event):
         """
         Получение координат курсора при клике.
-
-        :param event: Событие клика мыши.
-        :return: None.
         """
         self.click_position = event.globalPos()
 
     def move_window(self, e):
         """
         Логика перетаскивания окна приложения.
-
-        :param e: Событие нажатия левой кнопкой мыши.
-        :return: None.
         """
         if not self.isMaximized():
             if e.buttons() == QtCore.Qt.MouseButton.LeftButton:
@@ -280,8 +288,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def slide_left_menu(self):
         """
         Логика работы бокового меню.
-
-        :return: None.
         """
         width = self.side_menu_container.width()
         if width == MIN_WIDTH:

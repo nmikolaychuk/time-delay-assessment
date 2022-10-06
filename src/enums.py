@@ -9,6 +9,7 @@ class GraphType(Enum):
     RESEARCH = 1
     CORRELATION = 2
     BITS = 3
+    BER_OF_SNR = 4
 
 
 class SignalType(Enum):

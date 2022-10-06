@@ -134,28 +134,31 @@ class SignalGenerator:
 
         return x, y
 
-    def calc_research_signal(self):
+    def calc_research_signal(self, modulated: list, researched: list):
         """
         Получить исследуемый сигнал, в котором присутствует сдвинутая копия опорного сигнала.
         """
-        if not self.modulated_signal or not self.research_signal:
+        if not modulated or not researched:
             return
+
+        researched = list(researched)
 
         # Полученые временной задержки
         time_delay = self.time_delay / 1000
-        if time_delay > self.research_signal[0][-1] - self.modulated_signal[0][-1]:
+        if time_delay > researched[0][-1] - modulated[0][-1]:
             return
 
         # Замена участка исследуемого сигнала на манипулированный сигнал
         idx = 0
-        for i in range(len(self.research_signal[0])):
-            if self.research_signal[0][i] >= time_delay:
+        for i in range(len(researched[0])):
+            if researched[0][i] >= time_delay:
                 idx = i
                 break
 
-        signal_len = len(self.modulated_signal[0])
-        new_signal = self.research_signal[1][:idx] + self.modulated_signal[1] + self.research_signal[1][idx+signal_len:]
-        self.research_signal[1] = new_signal
+        signal_len = len(modulated[0])
+        new_signal = researched[1][:idx] + modulated[1] + researched[1][idx+signal_len:]
+        researched[1] = new_signal
+        return researched
 
     @staticmethod
     def _calc_signal_energy(signal: list):
@@ -178,24 +181,22 @@ class SignalGenerator:
             value += random.uniform(-1, 1)
         return value / av
 
-    def generate_noise(self, signal_type: SignalType):
+    def generate_noise(self, signal_type: SignalType, signal: list):
         """
         Генерация шума для сигнала
         """
         snr = None
-        signal = None
         if signal_type == SignalType.GENERAL:
             snr = 10
-            signal = self.modulated_signal
         elif signal_type == SignalType.RESEARCH:
             snr = self.snr
-            signal = self.research_signal
 
         if not signal:
             return
 
         # Расчет энергии шума
-        alpha = 1 / (10 ** (snr / 10))
+        signal_energy = self._calc_signal_energy(signal)
+        d = 1. / (10 ** (snr / 10))
 
         # Случайная шумовая добавка к каждому отсчету
         noise = []
@@ -206,6 +207,7 @@ class SignalGenerator:
             random_energy += random_value ** 2
 
         # Зашумленный сигнал
+        alpha = np.sqrt(d * signal_energy / random_energy)
         noise_signal = []
         for i in range(len(signal[1])):
             noise_signal.append(signal[1][i] + alpha * noise[i])
@@ -234,35 +236,34 @@ class SignalGenerator:
 
         return x, y
 
-    def get_correlation(self):
+    @staticmethod
+    def get_correlation(modulated: list, researched: list):
         """
         Расчет взаимной корреляционной функции опорного и исследуемого сигналов.
         """
-        if not self.modulated_signal or not self.research_signal:
+        if not modulated or not researched:
             return
 
-        # Очистка буфера
-        self.correlation_signal.clear()
-
         x, y = [], []
-        small_signal_length = len(self.modulated_signal[0])
-        big_signal_length = len(self.research_signal[0])
-        modulated = np.array(self.modulated_signal[1])
-        research = np.array(self.research_signal[1])
+        small_signal_length = len(modulated[0])
+        big_signal_length = len(researched[0])
+        modulate = np.array(modulated[1])
+        research = np.array(researched[1])
         for i in np.arange(0, big_signal_length - small_signal_length - 1):
-            summary = np.sum(np.multiply(modulated, research[i:small_signal_length+i])) / small_signal_length
+            summary = np.sum(np.multiply(modulate, research[i:small_signal_length+i])) / small_signal_length
 
-            x.append(self.research_signal[0][i])
+            x.append(researched[0][i])
             y.append(np.abs(summary))
 
-        self.correlation_signal = [x, y]
+        return x, y
 
-    def find_correlation_max(self):
+    @staticmethod
+    def find_correlation_max(correlation: list):
         """
         Нахождение максимума корреляционной функции
         """
-        if not self.correlation_signal:
+        if not correlation:
             return
 
-        max_element_idx = self.correlation_signal[1].index(max(self.correlation_signal[1]))
-        return self.correlation_signal[0][max_element_idx]
+        max_element_idx = correlation[1].index(max(correlation[1]))
+        return correlation[0][max_element_idx] * 1000
