@@ -106,9 +106,19 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         elif graph_type == GraphType.CORRELATION:
             self.graphics.clear_plot_ax3()
             self.graphics.plot_graph_ax3(x, y)
+        elif graph_type == GraphType.BITS:
+            if len(self.signal_generator.bits) > 10:
+                bits_str = str(self.signal_generator.bits[:10]).replace("]", ",") + " ...]"
+            else:
+                bits_str = str(self.signal_generator.bits)
+
+            self.helped_graphics.clear_plot()
+            self.helped_graphics.plot_graph(x, y, bits_str)
 
         self.graphics.draw()
         self.graphics.flush_events()
+        self.helped_graphics.draw()
+        self.helped_graphics.flush_events()
 
     def draw_main_page_graphics(self):
         """
@@ -134,6 +144,9 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.signal_generator.modulated_signal = [x, y]
             self.signal_generator.research_signal = [xr, yr]
 
+        # Получение бит для отрисовки
+        bits = self.signal_generator.get_bits_to_plot()
+
         # Вставка маленького сигнала в большой
         self.signal_generator.calc_research_signal()
 
@@ -151,7 +164,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Отрисовка
         if self.signal_generator.modulated_signal and \
             self.signal_generator.research_signal and \
-                self.signal_generator.correlation_signal:
+                self.signal_generator.correlation_signal and bits:
             # Генерация исследуемого сигнала
             self.draw(GraphType.MODULATED,
                       self.signal_generator.modulated_signal[0],
@@ -162,6 +175,9 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.draw(GraphType.CORRELATION,
                       self.signal_generator.correlation_signal[0],
                       self.signal_generator.correlation_signal[1])
+            self.draw(GraphType.BITS,
+                      bits[0],
+                      bits[1])
 
     def sr_change_logic(self):
         """

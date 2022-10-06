@@ -8,6 +8,7 @@ class GraphType(Enum):
     MODULATED = 0
     RESEARCH = 1
     CORRELATION = 2
+    BITS = 3
 
 
 class SignalType(Enum):

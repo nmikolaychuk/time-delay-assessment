@@ -31,15 +31,17 @@ class MplGraphicsHelped(FigureCanvas):
         self.ax.set_title("Последовательность информационных бит")
         self.ax.grid(linestyle="dotted", alpha=0.65)
 
-    def plot_graph(self, x_list: list, y_list: list):
+    def plot_graph(self, x_list: list, y_list: list, label: str):
         """
         Построение графика функции модулированного сигнала.
 
         :param x_list: Список временный отсчётов.
         :param y_list: Список значений.
+        :param label: Подпись графика.
         :return: None.
         """
-        self.ax.plot(x_list, y_list, linestyle="-", markersize=2, color='r')
+        self.ax.plot(x_list, y_list, linestyle="-", markersize=2, color='r', label=label)
+        self.ax.legend(loc="upper right", framealpha=1.0)
         self.ax.margins(y=0.8)
 
     def clear_plot(self):

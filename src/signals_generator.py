@@ -58,7 +58,7 @@ class SignalGenerator:
             x = random.randint(0, 1)
             bits.append(x)
 
-        return np.array(bits)
+        return bits
 
     def recalc_parameters(self):
         """
@@ -211,6 +211,28 @@ class SignalGenerator:
             noise_signal.append(signal[1][i] + alpha * noise[i])
 
         return signal[0], noise_signal
+
+    def get_bits_to_plot(self):
+        """
+        Получение информационных бит для отображения.
+        """
+        if not self.bits:
+            return
+
+        x = []
+        y = []
+        for i in range(self.bits_count):
+            x.append(i)
+            y.append(self.bits[i])
+            if i < self.bits_count - 1:
+                if self.bits[i] != self.bits[i + 1]:
+                    x.append(i + 1)
+                    y.append(self.bits[i])
+            else:
+                x.append(i + 1)
+                y.append(self.bits[i])
+
+        return x, y
 
     def get_correlation(self):
         """
