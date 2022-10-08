@@ -120,12 +120,14 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.helped_graphics.draw()
         self.helped_graphics.flush_events()
 
-    def draw_ber_of_snr(self, x_am: list, y_am: list, x_fm: list, y_fm: list, x_pm: list, y_pm: list):
+    def draw_ber_of_snr(self, x_am: list, y_am: list, err_am: list,
+                        x_fm: list, y_fm: list, err_fm: list,
+                        x_pm: list, y_pm: list, err_pm: list):
         """
         Отобразить график исследования.
         """
         self.research_graphics.clear_plot()
-        self.research_graphics.plot_graph(x_am, y_am, x_fm, y_fm, x_pm, y_pm)
+        self.research_graphics.plot_graph(x_am, y_am, err_am, x_fm, y_fm, err_fm, x_pm, y_pm, err_pm)
         self.research_graphics.draw()
         self.research_graphics.flush_events()
 
@@ -204,8 +206,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except ValueError:
             return
 
-        x_am, y_am, x_fm, y_fm, x_pm, y_pm = calc_research(average_count)
-        self.draw_ber_of_snr(x_am, y_am, x_fm, y_fm, x_pm, y_pm)
+        x_am, y_am, err_am, x_fm, y_fm, err_fm, x_pm, y_pm, err_pm = calc_research(average_count)
+        self.draw_ber_of_snr(x_am, y_am, err_am, x_fm, y_fm, err_fm, x_pm, y_pm, err_pm)
 
     def sr_change_logic(self):
         """

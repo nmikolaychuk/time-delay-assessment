@@ -13,9 +13,9 @@ def calc_research(average_count: int, from_noise: int = 10, to_noise: int = -11,
     max_t = float(DEFAULT_TIME_DELAY) + 0.5 * bit_time
 
     # Изменение уровня шума
-    x_am, y_am = [], []
-    x_fm, y_fm = [], []
-    x_pm, y_pm = [], []
+    x_am, y_am, errors_am = [], [], []
+    x_fm, y_fm, errors_fm = [], [], []
+    x_pm, y_pm, errors_pm = [], [], []
     for snr in range(from_noise, to_noise, step_noise):
         print(f"Запускается расчет исследования при {snr} дБ...")
         # Обновление уровня шума
@@ -65,11 +65,14 @@ def calc_research(average_count: int, from_noise: int = 10, to_noise: int = -11,
 
         x_am.append(snr)
         y_am.append(good_count_am / average_count)
+        errors_am.append(0.5 * bit_time)
 
         x_fm.append(snr)
         y_fm.append(good_count_fm / average_count)
+        errors_fm.append(0.5 * bit_time)
 
         x_pm.append(snr)
         y_pm.append(good_count_pm / average_count)
+        errors_pm.append(0.5 * bit_time)
 
-    return x_am, y_am, x_fm, y_fm, x_pm, y_pm
+    return x_am, y_am, errors_am, x_fm, y_fm, errors_fm, x_pm, y_pm, errors_pm
