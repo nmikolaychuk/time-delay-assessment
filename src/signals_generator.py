@@ -33,11 +33,11 @@ class SignalGenerator:
         # Параметры для АМ
         # Амплитуда, B
         self.low_ampl = 1.
-        self.high_ampl = 10.
+        self.high_ampl = 2.
 
         # Параметры для ФМ
         # Индекc модуляции
-        self.mod_index = 0.5
+        self.mod_index = 1.8
 
         # Расчет параметров
         # Минимальная и максимальная частота,Гц
@@ -116,14 +116,14 @@ class SignalGenerator:
             # Модуляция
             if modulation_type == ModulationType.AM:
                 ampl_value = self.low_ampl if bits[bit_index] == 0 else self.high_ampl
-                value = ampl_value * np.sin(w * t)
+                value = ampl_value * np.cos(w * t)
             elif modulation_type == ModulationType.FM:
                 bit_value = -1 if bits[bit_index] == 0 else 1
-                value = bit_value * np.sin(w * t)
+                value = bit_value * np.cos(w * t)
             elif modulation_type == ModulationType.PM:
                 bit_value = -1 if bits[bit_index] == 0 else 1
                 freq = self.low_freq if bit_value == -1 else self.high_freq
-                value = np.sin(freq * t + self.signal_phase)
+                value = np.cos(freq * t + self.signal_phase)
                 self.signal_phase = freq * t
             else:
                 return None, None
@@ -196,7 +196,7 @@ class SignalGenerator:
 
         # Расчет энергии шума
         signal_energy = self._calc_signal_energy(signal)
-        d = 1. / (10 ** (snr / 10))
+        d = signal_energy / (10 ** (snr / 10))
 
         # Случайная шумовая добавка к каждому отсчету
         noise = []
@@ -207,7 +207,7 @@ class SignalGenerator:
             random_energy += random_value ** 2
 
         # Зашумленный сигнал
-        alpha = np.sqrt(d * signal_energy / random_energy)
+        alpha = d / random_energy
         noise_signal = []
         for i in range(len(signal[1])):
             noise_signal.append(signal[1][i] + alpha * noise[i])
