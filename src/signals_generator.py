@@ -175,7 +175,7 @@ class SignalGenerator:
         """
         Рандомизация чисел для шума
         """
-        av = 12
+        av = 20
         value = 0.
         for i in range(av):
             value += random.uniform(-1, 1)
@@ -196,7 +196,7 @@ class SignalGenerator:
 
         # Расчет энергии шума
         signal_energy = self._calc_signal_energy(signal)
-        d = signal_energy / (10 ** (snr / 10))
+        noise_energy = signal_energy / (10 ** (snr / 10))
 
         # Случайная шумовая добавка к каждому отсчету
         noise = []
@@ -207,10 +207,12 @@ class SignalGenerator:
             random_energy += random_value ** 2
 
         # Зашумленный сигнал
-        alpha = d / random_energy
+        alpha = np.sqrt(noise_energy / random_energy)
         noise_signal = []
+        final_energy = 0.
         for i in range(len(signal[1])):
             noise_signal.append(signal[1][i] + alpha * noise[i])
+            final_energy += noise_signal[-1] ** 2
 
         return signal[0], noise_signal
 
@@ -250,7 +252,7 @@ class SignalGenerator:
         modulate = np.array(modulated[1])
         research = np.array(researched[1])
         for i in np.arange(0, big_signal_length - small_signal_length - 1):
-            summary = np.sum(np.multiply(modulate, research[i:small_signal_length+i])) / small_signal_length
+            summary = np.sum(np.multiply(modulate, research[i:small_signal_length+i]))
 
             x.append(researched[0][i])
             y.append(np.abs(summary))

@@ -170,8 +170,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.signal_generator.research_signal = researched
 
         # Расчет взаимной корреляционной функции
-        correlation = self.signal_generator.get_correlation(self.signal_generator.modulated_signal,
-                                                            self.signal_generator.research_signal)
+        correlation = self.signal_generator.get_correlation(modulated,
+                                                            researched)
         self.signal_generator.correlation_signal = correlation
 
         # Оценка временной задержки
