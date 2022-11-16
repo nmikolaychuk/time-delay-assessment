@@ -86,11 +86,11 @@ class MplGraphicsResearch(FigureCanvas):
         Построение графика функции модулированного сигнала.
         """
         self.ax.errorbar(x_am, y_am, yerr=errors_am, fmt='o', linestyle='-', markersize=3, elinewidth=0.5,
-                         ecolor='black', color='r', label="AM", capsize=2, capthick=0.5)
+                         ecolor='black', color='r', label="АМ", capsize=2, capthick=0.5)
         self.ax.errorbar(x_fm, y_fm, yerr=errors_fm, fmt='o', linestyle='-', markersize=3, elinewidth=0.5,
-                         ecolor='black', color='g', label="FM", capsize=2, capthick=0.5)
+                         ecolor='black', color='g', label="ЧМ", capsize=2, capthick=0.5)
         self.ax.errorbar(x_pm, y_pm, yerr=errors_pm, fmt='o', linestyle='-', markersize=3, elinewidth=0.5,
-                         ecolor='black', color='b', label="PM", capsize=2, capthick=0.5)
+                         ecolor='black', color='b', label="ФМ", capsize=2, capthick=0.5)
 
         self.ax.legend(loc="lower right", framealpha=1.0)
 

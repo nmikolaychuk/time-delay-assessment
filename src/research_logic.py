@@ -1,5 +1,3 @@
-import random
-
 from signals_generator import SignalGenerator
 from defaults import *
 from enums import *
@@ -10,6 +8,10 @@ def calc_research(average_count: int, from_noise: int = 10, to_noise: int = -11,
     signals_generator = SignalGenerator()
     # Длительность бита
     bit_time = 1. / float(DEFAULT_BITS_PER_SECOND)
+
+    # Доверительный интервал
+    min_t = float(signals_generator.time_delay) - 0.5 * bit_time
+    max_t = float(signals_generator.time_delay) + 0.5 * bit_time
 
     # Изменение уровня шума
     x_am, y_am, errors_am = [], [], []
@@ -25,12 +27,6 @@ def calc_research(average_count: int, from_noise: int = 10, to_noise: int = -11,
         good_count_pm = 0
         # Цикл для усреднений
         for avg in range(average_count):
-            signals_generator.time_delay = random.uniform(0, bit_time * signals_generator.bits_count * 2)
-
-            # Доверительный интервал
-            min_t = float(signals_generator.time_delay) - 0.5 * bit_time
-            max_t = float(signals_generator.time_delay) + 0.5 * bit_time
-
             # Модулированные сигналы
             modulate_am = signals_generator.calc_modulated_signal(SignalType.GENERAL, ModulationType.AM)
             modulate_fm = signals_generator.calc_modulated_signal(SignalType.GENERAL, ModulationType.FM)

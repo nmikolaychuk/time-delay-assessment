@@ -142,12 +142,12 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
             xr, yr = self.signal_generator.calc_modulated_signal(SignalType.RESEARCH, ModulationType.AM)
             self.signal_generator.modulated_signal = [x, y]
             self.signal_generator.research_signal = [xr, yr]
-        elif self.fm2_manipulation_radio.isChecked():
+        elif self.mchm_manipulation_radio.isChecked():
             x, y = self.signal_generator.calc_modulated_signal(SignalType.GENERAL, ModulationType.FM)
             xr, yr = self.signal_generator.calc_modulated_signal(SignalType.RESEARCH, ModulationType.FM)
             self.signal_generator.modulated_signal = [x, y]
             self.signal_generator.research_signal = [xr, yr]
-        elif self.mchm_manipulation_radio.isChecked():
+        elif self.fm2_manipulation_radio.isChecked():
             x, y = self.signal_generator.calc_modulated_signal(SignalType.GENERAL, ModulationType.PM)
             xr, yr = self.signal_generator.calc_modulated_signal(SignalType.RESEARCH, ModulationType.PM)
             self.signal_generator.modulated_signal = [x, y]
@@ -170,8 +170,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.signal_generator.research_signal = researched
 
         # Расчет взаимной корреляционной функции
-        correlation = self.signal_generator.get_correlation(modulated,
-                                                            researched)
+        correlation = self.signal_generator.get_correlation(self.signal_generator.modulated_signal,
+                                                            self.signal_generator.research_signal)
         self.signal_generator.correlation_signal = correlation
 
         # Оценка временной задержки
@@ -221,7 +221,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Обработка события изменения значения в поле "Количество информационных бит".
         """
         if self.bits_count_edit.text().isdigit():
-            self.signal_generator.bits_count = float(self.bits_count_edit.text())
+            self.signal_generator.bits_count = int(self.bits_count_edit.text())
 
     def bits_per_second_change_logic(self):
         """

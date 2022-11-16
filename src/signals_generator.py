@@ -33,7 +33,7 @@ class SignalGenerator:
         # Параметры для АМ
         # Амплитуда, B
         self.low_ampl = 1.
-        self.high_ampl = 2.
+        self.high_ampl = 8.
 
         # Параметры для ФМ
         # Индекc модуляции
@@ -119,12 +119,12 @@ class SignalGenerator:
                 value = ampl_value * np.cos(w * t)
             elif modulation_type == ModulationType.FM:
                 bit_value = -1 if bits[bit_index] == 0 else 1
-                value = bit_value * np.cos(w * t)
-            elif modulation_type == ModulationType.PM:
-                bit_value = -1 if bits[bit_index] == 0 else 1
                 freq = self.low_freq if bit_value == -1 else self.high_freq
                 value = np.cos(freq * t + self.signal_phase)
                 self.signal_phase = freq * t
+            elif modulation_type == ModulationType.PM:
+                bit_value = -1 if bits[bit_index] == 0 else 1
+                value = bit_value * np.cos(w * t)
             else:
                 return None, None
 
@@ -209,10 +209,8 @@ class SignalGenerator:
         # Зашумленный сигнал
         alpha = np.sqrt(noise_energy / random_energy)
         noise_signal = []
-        final_energy = 0.
         for i in range(len(signal[1])):
             noise_signal.append(signal[1][i] + alpha * noise[i])
-            final_energy += noise_signal[-1] ** 2
 
         return signal[0], noise_signal
 
@@ -252,10 +250,9 @@ class SignalGenerator:
         modulate = np.array(modulated[1])
         research = np.array(researched[1])
         for i in np.arange(0, big_signal_length - small_signal_length - 1):
-            summary = np.sum(np.multiply(modulate, research[i:small_signal_length+i]))
-
+            summary = np.sum(np.multiply(modulate, research[i:small_signal_length+i])) / small_signal_length
             x.append(researched[0][i])
-            y.append(np.abs(summary))
+            y.append(summary)
 
         return x, y
 
