@@ -206,7 +206,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         except ValueError:
             return
 
-        x_am, y_am, err_am, x_fm, y_fm, err_fm, x_pm, y_pm, err_pm = calc_research(average_count)
+        x_am, y_am, err_am, x_fm, y_fm, err_fm, x_pm, y_pm, err_pm = calc_research(average_count, self.signal_generator)
         self.draw_ber_of_snr(x_am, y_am, err_am, x_fm, y_fm, err_fm, x_pm, y_pm, err_pm)
 
     def sr_change_logic(self):

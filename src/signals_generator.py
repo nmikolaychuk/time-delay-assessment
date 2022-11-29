@@ -33,16 +33,12 @@ class SignalGenerator:
         # Параметры для АМ
         # Амплитуда, B
         self.low_ampl = 1.
-        self.high_ampl = 8.
-
-        # Параметры для ФМ
-        # Индекc модуляции
-        self.mod_index = 1.8
+        self.high_ampl = 10.
 
         # Расчет параметров
         # Минимальная и максимальная частота,Гц
         self.low_freq = 2. * np.pi * self.signal_freq
-        self.high_freq = self.mod_index * self.low_freq
+        self.high_freq = 4. * np.pi * self.signal_freq
 
         # Параметры большого сигнала
         self.rsch_signal_freq = self.signal_freq
@@ -66,7 +62,7 @@ class SignalGenerator:
         """
         # Минимальная и максимальная частота,Гц
         self.low_freq = 2. * np.pi * self.signal_freq
-        self.high_freq = self.mod_index * self.low_freq
+        self.high_freq = 4. * np.pi * self.signal_freq
 
         # Параметры большого сигнала
         self.rsch_signal_freq = self.signal_freq
@@ -92,7 +88,6 @@ class SignalGenerator:
         """
         Построить амплитудно-манипулированный сигнал.
         """
-        self.signal_phase = 0
         # Характеристики сигнала в зависимости от его типа
         bits_count = self.bits_count
         signal_freq = self.signal_freq
@@ -118,13 +113,12 @@ class SignalGenerator:
                 ampl_value = self.low_ampl if bits[bit_index] == 0 else self.high_ampl
                 value = ampl_value * np.cos(w * t)
             elif modulation_type == ModulationType.FM:
-                bit_value = -1 if bits[bit_index] == 0 else 1
-                freq = self.low_freq if bit_value == -1 else self.high_freq
+                freq = self.low_freq if bits[bit_index] == 0 else self.high_freq
                 value = np.cos(freq * t + self.signal_phase)
                 self.signal_phase = freq * t
             elif modulation_type == ModulationType.PM:
-                bit_value = -1 if bits[bit_index] == 0 else 1
-                value = bit_value * np.cos(w * t)
+                ph = 0 if bits[bit_index] == 0 else np.pi
+                value = np.cos(w * t + ph)
             else:
                 return None, None
 
@@ -244,16 +238,10 @@ class SignalGenerator:
         if not modulated or not researched:
             return
 
-        x, y = [], []
-        small_signal_length = len(modulated[0])
-        big_signal_length = len(researched[0])
-        modulate = np.array(modulated[1])
         research = np.array(researched[1])
-        for i in np.arange(0, big_signal_length - small_signal_length - 1):
-            summary = np.sum(np.multiply(modulate, research[i:small_signal_length+i])) / small_signal_length
-            x.append(researched[0][i])
-            y.append(summary)
-
+        modulate = np.array(modulated[1])
+        y = np.correlate(research, modulate, 'valid').tolist()
+        x = researched[0][:len(y)]
         return x, y
 
     @staticmethod
